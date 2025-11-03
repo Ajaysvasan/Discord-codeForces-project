@@ -1,0 +1,112 @@
+body{
+    font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 1300px;
+    margin-top:20vh;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.form h1 {
+    text-align: center;
+    font-size: 2.2rem;
+    color: #423e5c;
+    margin-bottom: 1.5rem;
+    width: 100%;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 18px;
+    box-shadow: 0 8px 32px rgba(50, 40, 100, 0.18);
+    border: 2px solid rgba(150, 120, 255, 0.8); 
+    background: rgba(255, 255, 255, 0.96);
+    max-width: 95vw;
+    width: 410px;
+    padding: 2rem;
+}
+
+.container form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.input-box {
+    margin: 18px 0;
+    width: 100%;
+    position: relative;
+}
+
+.input-box input {
+    height: 38px;
+    width: 100%;
+    border: 1.5px solid #9c7dff;
+    border-radius: 20px;
+    padding: 0 16px;
+    font-size: 1rem;
+    background: rgba(150, 120, 255, 0.12);
+    outline: none;
+    transition: border 0.2s;
+}
+
+.input-box input:focus {
+    border: 2px solid #6e54fa;
+    background: rgba(200, 200, 255, 0.18);
+}
+
+.btn {
+    margin-top: 18px;
+    padding: 0 22px;
+    height: 38px;
+    border-radius: 20px;
+    border: none;
+    background: linear-gradient(90deg, #856edb 60%, #6e54fa 100%);
+    color: #fff;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px rgba(100, 90, 200, 0.16);
+}
+
+.btn:hover {
+    background: linear-gradient(90deg, #6e54fa 70%, #856edb 100%);
+    box-shadow: 0 4px 16px rgba(110, 84, 250, 0.18);
+}
+
+.register {
+    margin-top: 14px;
+    font-size: 0.97rem;
+    color: #423e5c;
+    text-align: center;
+}
+
+.register a {
+    color: #6e54fa;
+    text-decoration: none;
+    margin-left: 4px;
+    font-weight: 500;
+}
+
+.register a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+    .form-container {
+        width: 96vw;
+        padding: 1.3rem 0.6rem;
+    }
+    .login-form h1 {
+        font-size: 1.5rem;
+    }
+}
