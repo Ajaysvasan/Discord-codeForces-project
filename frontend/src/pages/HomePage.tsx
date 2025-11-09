@@ -19,11 +19,7 @@ const HomePage = ()=>{
                 <SideBar></SideBar>
             </div>
             <div className="server-components">
-                {/* {
-                    servers.map((server)=>(
-                        <Server key = {server.serverName} serverComponents = {server.serverComponents}></Server>
-                    ))
-                } */}
+                <Server>z</Server>
             </div>
         </div>
     )

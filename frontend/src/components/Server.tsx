@@ -1,7 +1,4 @@
-const Server = (serverComponents:any)=>{
-
-    console.log((serverComponents[0]))
-
+const Server = ()=>{
     return(
         <nav id="server-container">
             <h1>Hello world</h1>
