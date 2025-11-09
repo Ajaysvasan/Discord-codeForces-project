@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 const RegisterPage = ()=>{
     const navigate = useNavigate();
-    const handleRegister = (e:React.FormEvent)=>{
+    const handleRegister = (e)=>{
       e.preventDefault();
       navigate("/home")
     }

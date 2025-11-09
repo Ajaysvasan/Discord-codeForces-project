@@ -21,7 +21,7 @@ const LoginPage = ()=>{
         console.log("world ");
     }
 
-    const handleLogin = (e:React.FormEvent)=>{
+    const handleLogin = (e)=>{
         e.preventDefault();
         navigate("/home");
     }
