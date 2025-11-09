@@ -1,22 +1,16 @@
 import { useState } from "react";
 
 import "../App.css"
-const SideBar = ()=>{
+const SideBar = ({servers:any})=>{
 
     const [ServerName , setServerName] = useState("");
 
     console.log(ServerName);
 
-    const handleClick =(server:string)=>{
+    const handleClick =(server)=>{
         setServerName(server);
         console.log(server);
     }
-
-    const servers = [
-        {serverName:"python"  },
-        {serverName:"C++" },
-        {serverName:"C"},
-    ];
     return(
         <nav id="side-bar">
             <h3>Servers list</h3>
