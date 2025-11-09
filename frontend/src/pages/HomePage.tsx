@@ -1,6 +1,6 @@
 import SideBar from "../components/SideBar";
 import "../App.css"
-import Server from "../components/Server";
+import Server from "../components/Server"
 const HomePage = ()=>{
 
     const servers = [
@@ -19,7 +19,7 @@ const HomePage = ()=>{
                 <SideBar></SideBar>
             </div>
             <div className="server-components">
-                <Server>z</Server>
+                <Server></Server>
             </div>
         </div>
     )
