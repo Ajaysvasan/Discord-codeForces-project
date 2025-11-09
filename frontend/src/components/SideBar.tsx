@@ -13,8 +13,8 @@ const SideBar = ()=>{
     }
 
     const servers = [
-        {serverName:"python" , serverComponents:["chat room" , "about room" , "problem statement"] },
-        {serverName:"C++"  , serverComponents:["PS" , "solution"]},
+        {serverName:"python"  },
+        {serverName:"C++" },
         {serverName:"C"},
     ];
     return(

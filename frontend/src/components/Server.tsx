@@ -1,19 +1,7 @@
-const Server = (serverComponents:any)=>{
-
-    console.log((serverComponents[0]))
-
+const Server = ()=>{
     return(
-        <nav id="server-container">
-            <h1>Hello world</h1>
-            {
-                serverComponents.map((comp:any)=>(
-                    <div className="components" key={comp}>
-                        <button>{comp}</button>
-                    </div>
-                ))
-            }
-        </nav>
-    )
+        <h2>Hello world</h2>
+    );
 }
 
 export default Server;
