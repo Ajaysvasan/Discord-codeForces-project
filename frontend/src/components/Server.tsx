@@ -6,7 +6,7 @@ const Server = ()=>{
         </nav>
     )
 
-    );
+
 
 }
 
