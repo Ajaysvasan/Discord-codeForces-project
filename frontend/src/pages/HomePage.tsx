@@ -6,7 +6,7 @@ const HomePage = ()=>{
     const servers = [
         {serverName:"python" , serverComponents:["chat room" , "about room" , "problem statement"] },
         {serverName:"C++"  , serverComponents:["PS" , "solution"]},
-        {serverName:"C"},
+        {serverName:"C" ,  serverComponents:["PS" , "solution"]},
     ];
     
     if(servers.length){
@@ -16,7 +16,7 @@ const HomePage = ()=>{
     return(
         <div className="home">
             <div className="side-bar">
-                <SideBar></SideBar>
+                <SideBar servers={servers}></SideBar>
             </div>
             <div className="server-components">
                 <Server></Server>

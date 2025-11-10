@@ -1,7 +1,8 @@
 const Server = ()=>{
     return(
         <nav id="server-container">
-            <h1>Hello world</h1>
+            <h2>Server components</h2>
+            
         </nav>
     )
 }

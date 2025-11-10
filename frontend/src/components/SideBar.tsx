@@ -1,7 +1,17 @@
 import { useState } from "react";
 
 import "../App.css"
-const SideBar = ()=>{
+
+interface Server{
+    serverName:string;
+    serverComponents:string[];
+}
+
+interface SideBarProps{
+    servers:Server[];
+}
+
+const SideBar:React.FC<SideBarProps> = ({servers})=>{
 
     const [ServerName , setServerName] = useState("");
 
@@ -11,12 +21,6 @@ const SideBar = ()=>{
         setServerName(server);
         console.log(server);
     }
-
-    const servers = [
-        {serverName:"python" , serverComponents:["chat room" , "about room" , "problem statement"] },
-        {serverName:"C++"  , serverComponents:["PS" , "solution"]},
-        {serverName:"C"},
-    ];
     return(
         <nav id="side-bar">
             <h3>Servers list</h3>
