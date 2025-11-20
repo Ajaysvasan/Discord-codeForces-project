@@ -1,6 +1,6 @@
 import '../styles/formPage.css'
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 const LoginPage = ()=>{
     const navigate = useNavigate();
 

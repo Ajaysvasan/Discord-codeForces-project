@@ -1,8 +1,7 @@
-import SideBar from "../components/SideBar";
+import Channels from "../components/Channels";
 import "../App.css"
 import Server from "../components/Server"
 const HomePage = ()=>{
-
     const servers = [
         {serverName:"python" , serverComponents:["chat room" , "about room" , "problem statement"] },
         {serverName:"C++"  , serverComponents:["PS" , "solution"]},
@@ -16,10 +15,10 @@ const HomePage = ()=>{
     return(
         <div className="home">
             <div className="side-bar">
-                <SideBar servers={servers}></SideBar>
+                <Server servers={servers}></Server>
             </div>
             <div className="server-components">
-                <Server></Server>
+                <Channels></Channels>
             </div>
         </div>
     )
