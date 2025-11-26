@@ -1,4 +1,3 @@
-import Channels from "../components/Channels";
 import "../App.css"
 import Server from "../components/Server"
 const HomePage = ()=>{
@@ -16,9 +15,6 @@ const HomePage = ()=>{
         <div className="home">
             <div className="side-bar">
                 <Server servers={servers}></Server>
-            </div>
-            <div className="server-components">
-                <Channels></Channels>
             </div>
         </div>
     )
