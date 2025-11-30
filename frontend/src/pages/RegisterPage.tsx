@@ -1,22 +1,21 @@
-import "../styles/formPage.css"
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import "./styles/registerPage.css"
 const RegisterPage = ()=>{
     const navigate = useNavigate();
     const handleRegister = (e:React.FormEvent)=>{
       e.preventDefault();
       navigate("/home")
     }
-    useEffect(()=>{
-            document.body.style.background = "linear-gradient(135deg, #656579 60%, #b5a7ff 100%)";
-            document.body.style.backgroundAttachment = "fixed";
-            document.body.style.backgroundRepeat = "no-repeat";
-            return()=>{
-                document.body.style.background = "";
-            };
-        } , []);
-
-  return(
+     useEffect(()=>{
+         document.body.style.background = "linear-gradient(#353935 , black)"; 
+         document.body.style.backgroundAttachment = "fixed";
+         document.body.style.backgroundRepeat = "no-repeat";
+         return()=>{
+             document.body.style.background = "";
+         };
+     } , []);
+    return(
     <div className="form">
       <h1>Register</h1>
       <div className="container">

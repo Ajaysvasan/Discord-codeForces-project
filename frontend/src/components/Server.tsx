@@ -16,6 +16,7 @@ const Server: React.FC<SideBarProps> = ({ servers }) => {
   const handleClick = (server:string)=>{
     selectedServer = server;
     setServerName(server);
+    console.log(ServerName);
     console.log(selectedServer); 
   }
 
@@ -28,23 +29,27 @@ const Server: React.FC<SideBarProps> = ({ servers }) => {
   // console.log(getServerChannels(selectedServer , servers));
 
    return (
-    <nav id="side-bar">
-      <h3>Servers list</h3>
-      {
-        servers.map((server) => (
-          <div className="serverName" key={server.serverName}>
-            <button className="server-btn" onClick={() => handleClick(server.serverName)}>{server.serverName}</button>
-          </div>
-        ))
-      }
-      {
-        selectedServer !== "" && (
-          <div className="Channels">
-            <Channels channels = {getServerChannels(selectedServer , servers)}/>            
-          </div>
-        )
-      }
-    </nav>
+    <div className = "lists">
+      <nav className="serverList">
+        <h3>Servers list</h3>
+        {
+          servers.map((server) => (
+            <div className="serverName" key={server.serverName}>
+              <button className="server-btn" onClick={() => handleClick(server.serverName)}>{server.serverName}</button>
+            </div>
+          ))
+        }
+        </nav>
+        <div className="channelList">
+        {
+          selectedServer !== "" && (
+            <div className="Channel">
+              <Channels channels = {getServerChannels(selectedServer , servers)}/>            
+            </div>
+          )
+        }
+      </div>
+    </div>
   )
 }
 export default Server;     

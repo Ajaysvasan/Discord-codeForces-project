@@ -1,18 +1,18 @@
-import '../styles/formPage.css'
 import { useNavigate } from 'react-router-dom';
 import React, { useEffect } from 'react';
+import "./styles/loginPage.css";
 const LoginPage = ()=>{
     const navigate = useNavigate();
 
-    useEffect(()=>{
-        document.body.style.background = "linear-gradient(135deg, #656579 60%, #b5a7ff 100%)";
-        document.body.style.backgroundAttachment = "fixed";
-        document.body.style.backgroundRepeat = "no-repeat";
-        return()=>{
-            document.body.style.background = "";
-        };
-    } , []);
-        
+     useEffect(()=>{
+         document.body.style.background = "linear-gradient(#353935 , black)";
+         document.body.style.backgroundAttachment = "fixed";
+         document.body.style.backgroundRepeat = "no-repeat";
+         return()=>{
+             document.body.style.background = "";
+         };
+     } , []);
+         
     const validEmail = ()=>{
         console.log("Hello");
     }

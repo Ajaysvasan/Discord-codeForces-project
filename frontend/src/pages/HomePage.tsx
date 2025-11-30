@@ -1,4 +1,5 @@
 import "../App.css"
+import "./styles/homePage.css";
 import Server from "../components/Server"
 const HomePage = ()=>{
     const servers = [
