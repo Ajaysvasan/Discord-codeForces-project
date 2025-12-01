@@ -25,7 +25,7 @@ const HomePage = ()=>{
     return(
         <div className="home">
           <div className="serverList">
-
+            <h2>Server components</h2>
             {
               servers.map(server=>(
                 <Server server= {server.serverName} key={server.serverName}

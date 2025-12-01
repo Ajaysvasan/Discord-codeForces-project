@@ -1,14 +1,16 @@
+import "./styles/channels.css"
 const Channels = ({ channels }: { channels: string[] }) => {
   console.log("channels:", channels);
 
   return (
-    <nav id="server-container">
-      <h2>Server components</h2>
-
+    <nav id="channel-container">
+      <h2>Channels</h2>
       {channels.map((name, index) => (
-        <a key={index} className="channel" href="#">
+        <div className="channel">
+        <button key={index} className="channel-btn">
           {name}
-        </a>
+        </button>
+        </div>
       ))}
     </nav>
   );
