@@ -40,10 +40,12 @@ const HomePage = ()=>{
           }
           </div>
 
-        <div className="text-space">
+        <div className="text-space-component">
             {
                 ChannelName !== "" && (
+                        <div className = "text-space">
                     <TextSpace selectedChannel={ChannelName}/>
+                    </div>
                 )
             }
         </div>

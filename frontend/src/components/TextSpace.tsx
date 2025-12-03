@@ -16,7 +16,7 @@ const TextSpace = ({selectedChannel}:TextInfo)=>{
     }
 
   return(
-    <div className="text-space">
+    <div className="text-component">
         <div className="message-area">
             {message}
         </div>
