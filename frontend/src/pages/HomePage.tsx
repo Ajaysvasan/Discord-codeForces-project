@@ -3,13 +3,11 @@ import "../App.css"
 import "./styles/homePage.css";
 import Server from "../components/Server";
 import Channels from "../components/Channels";
-
-interface ServerInfo{
-  server:string;
-  serverComponents:string [];
-}
+import TextSpace from "../components/TextSpace";
 
 const HomePage = ()=>{
+    const [ServerName, setServerName] = useState("");
+    const [ChannelName , setChannelName] = useState("");
     const servers = [
         {serverName:"python" , serverComponents:["chat room" , "about room" , "problem statement"] },
         {serverName:"C++"  , serverComponents:["PS" , "solution"]},
@@ -20,7 +18,6 @@ const HomePage = ()=>{
         const channels = servers.find(server=>server.serverName === selectedServer); 
         return channels.serverComponents;
   }
-    const [ServerName, setServerName] = useState("");
 
     return(
         <div className="home">
@@ -37,11 +34,19 @@ const HomePage = ()=>{
           {
             ServerName !== "" && (
               <div className="Channel">
-                <Channels channels = {getServerChannels(ServerName, servers)}/>            
+                <Channels channels = {getServerChannels(ServerName, servers)} setSelectedChannel={setChannelName}/>            
               </div>
             )
           }
           </div>
+
+        <div className="text-space">
+            {
+                ChannelName !== "" && (
+                    <TextSpace selectedChannel={ChannelName}/>
+                )
+            }
+        </div>
  
         </div>
     )
