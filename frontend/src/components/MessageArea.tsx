@@ -1,9 +1,8 @@
 import {useState} from "react";
-import "./styles/textspace.css";
-interface TextInfo{
+interface SelectedChannelName{
   selectedChannel:string
 }
-const TextSpace = ({selectedChannel}:TextInfo)=>{
+const MessageArea = ({selectedChannel}:SelectedChannelName)=>{
     const [message , setMessage] = useState("");
     const [inputValue , setInputValue] = useState("");
     console.log(selectedChannel);
@@ -18,13 +17,11 @@ const TextSpace = ({selectedChannel}:TextInfo)=>{
   return(
     <div className="text-component">
         <div className="message-area">
-            {message}
         </div>
         <div className="input-box">
-            <input type="text" value={inputValue} onChange={(e)=>setInputValue(e.target.value)} onKeyDown={handleKeyDown} />
         </div>
     </div>
   );
 }
 
-export default TextSpace;
+export default MessageArea;

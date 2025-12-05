@@ -1,0 +1,11 @@
+.input-box {
+    position: fixed;
+    bottom: 0;
+    margin-right: 24px;
+    width: 100%;
+    background-color: red;
+}
+
+.input-box .input {
+    width: 100vh;
+}
