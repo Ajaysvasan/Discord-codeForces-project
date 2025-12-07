@@ -3,18 +3,17 @@ import "../App.css"
 import "./styles/homePage.css";
 import Server from "../components/Server";
 import Channels from "../components/Channels";
-import TextSpace from "../components/TextSpace";
+import MessageArea from '../components/MessageArea';
 
 const HomePage = ()=>{
     const [ServerName, setServerName] = useState("");
     const [ChannelName , setChannelName] = useState("");
     const servers = [
-        {serverName:"python" , serverComponents:["chat room" , "about room" , "problem statement"] },
-        {serverName:"C++"  , serverComponents:["PS" , "solution"]},
-        {serverName:"C" ,  serverComponents:["PS" , "solution"]},
-    ];
-
-     const getServerChannels = (selectedServer:string , servers:any)=>{
+        {serverName:"python" , serverComponents:["chat room" , "about room" , "problem statement"] }
+        , {serverName:"C++" , serverComponents:["PS" , "solution"]}
+        , {serverName:"C" , serverComponents:["PS" , "solution"]},
+    ];  
+    const getServerChannels = (selectedServer:string , servers:any)=>{
         const channels = servers.find(server=>server.serverName === selectedServer); 
         return channels.serverComponents;
   }
@@ -22,7 +21,6 @@ const HomePage = ()=>{
     return(
         <div className="home">
           <div className="serverList">
-            <h2>Server components</h2>
             {
               servers.map(server=>(
                 <Server server= {server.serverName} key={server.serverName}
@@ -40,16 +38,15 @@ const HomePage = ()=>{
           }
           </div>
 
-        <div className="text-space-component">
+            <div className="text-space-component">
             {
                 ChannelName !== "" && (
                         <div className = "text-space">
-                    <TextSpace selectedChannel={ChannelName}/>
+                    <MessageArea selectedChannel={ChannelName}/>
                     </div>
                 )
             }
-        </div>
- 
+            </div>
         </div>
     )
 }

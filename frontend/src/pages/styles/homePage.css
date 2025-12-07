@@ -10,24 +10,27 @@ body {
 
 .home {
     display: grid;
-    height: 100%;
-    grid-template-rows: 101vh;
+    height: 100vh;
+    grid-template-rows: repeat(100vh, 3);
     grid-template-columns: 0.2fr 0.2fr 3fr 0.5fr;
 }
 
 .serverList {
     position: relative;
+    width: 130px;
     z-index: 10;
     background: grey;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    overflow-y: auto;
 }
 
-.Channel {
+.channelList {
+    width: 300px;
     background-color: #4A4A4A;
-    height: 100%;
+    position: relative;
+    overflow-y: auto;
 }
 
-.text-space {
-    height: 100%;
+.text-space-component {
     background-color: grey;
 }

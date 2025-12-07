@@ -1,0 +1,10 @@
+.input-box {
+    position: fixed;
+    bottom: 0;
+    margin-right: 24px;
+    width: 100vh;
+}
+
+.input-box .input {
+    width: 100%;
+}
