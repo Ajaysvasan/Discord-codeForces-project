@@ -9,10 +9,11 @@ const HomePage = ()=>{
     const [ServerName, setServerName] = useState("");
     const [ChannelName , setChannelName] = useState("");
     const servers = [
-        {serverName:"python" , serverComponents:["chat room" , "about room" , "problem statement"] }
-        , {serverName:"C++" , serverComponents:["PS" , "solution"]}
-        , {serverName:"C" , serverComponents:["PS" , "solution"]},
+        {serverName:"python" , serverComponents:["chat room" , "about room" , "code room"] }
+        , {serverName:"C++" , serverComponents:["PS" , "code room"]}
+        , {serverName:"C" , serverComponents:["PS" , "code room"]},
     ];  
+
     const getServerChannels = (selectedServer:string , servers:any)=>{
         const channels = servers.find(server=>server.serverName === selectedServer); 
         return channels.serverComponents;
