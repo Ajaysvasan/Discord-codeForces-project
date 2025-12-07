@@ -8,11 +8,46 @@ import MessageArea from '../components/MessageArea';
 const HomePage = ()=>{
     const [ServerName, setServerName] = useState("");
     const [ChannelName , setChannelName] = useState("");
-    const servers = [
-        {serverName:"python" , serverComponents:["chat room" , "about room" , "code room"] }
-        , {serverName:"C++" , serverComponents:["PS" , "code room"]}
-        , {serverName:"C" , serverComponents:["PS" , "code room"]},
-    ];  
+
+interface Channel{
+        id:string;
+        name:string;
+        type:"text" | "voice" | "code";
+    }
+interface ServerData{
+    id:string;
+    serverName:string;
+    channels:Channel[]
+}
+
+const servers:ServerData[] = [
+  {
+    id: "srv-python",
+    serverName: "Python",
+    channels: [
+      { id: "py-chat", name: "Chat Room", type: "text" },
+      { id: "py-about", name: "About Room", type: "text" },
+      { id: "py-code", name: "Code Room", type: "code" }
+    ]
+  },
+  {
+    id: "srv-cpp",
+    serverName: "C++",
+    channels: [
+      { id: "cpp-ps", name: "Problem Statements", type: "text" },
+      { id: "cpp-code", name: "Code Room", type: "code" }
+    ]
+  },
+  {
+    id: "srv-c",
+    serverName: "C",
+    channels: [
+      { id: "c-ps", name: "Problem Statements", type: "text" },
+      { id: "c-code", name: "Code Room", type: "code" }
+    ]
+  }
+];
+
 
     const getServerChannels = (selectedServer:string , servers:any)=>{
         const channels = servers.find(server=>server.serverName === selectedServer); 
