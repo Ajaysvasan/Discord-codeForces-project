@@ -1,5 +1,6 @@
 import "./styles/channels.css";
-import Code from "./Code";
+import React from "react";
+import CodeArea from "./CodeArea";
 interface Channel {
   id: string | number;
   name: string;
@@ -21,16 +22,19 @@ const Channels = ({ channels, setSelectedChannel }: ChannelsInfo) => {
   return (
     <nav id="channel-container">
       <h2>Channels</h2>
+
       {channels.map((channel) => (
-        <div className="channel" key={channel.id}>
-          <button onClick={() => handleChannelClick(channel.name)}>
-            {channel.name}
-          </button>
-        </div>
+        <React.Fragment key={channel.id}>
+          {channel.type === "code" && <CodeArea />}
+
+          <div className="channel">
+            <button onClick={() => handleChannelClick(channel.name)}>
+              {channel.name}
+            </button>
+          </div>
+        </React.Fragment>
       ))}
-      <Code />
     </nav>
   );
 };
-
 export default Channels;
