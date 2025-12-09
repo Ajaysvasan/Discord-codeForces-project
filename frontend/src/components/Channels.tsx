@@ -1,5 +1,5 @@
 import "./styles/channels.css";
-import Code from "./Code";
+import React from "react";
 interface Channel {
   id: string | number;
   name: string;
@@ -9,11 +9,17 @@ interface Channel {
 interface ChannelsInfo {
   channels: Channel[]; // Changed from object to Channel[]
   setSelectedChannel: (name: string) => void;
+  setChannelType: (channelType: string) => void;
 }
 
-const Channels = ({ channels, setSelectedChannel }: ChannelsInfo) => {
-  const handleChannelClick = (channelName: string) => {
+const Channels = ({
+  setChannelType,
+  channels,
+  setSelectedChannel,
+}: ChannelsInfo) => {
+  const handleChannelClick = (channelName: string, channelType: string) => {
     setSelectedChannel(channelName);
+    setChannelType(channelType);
   };
 
   console.log("channels:", channels);
@@ -21,16 +27,19 @@ const Channels = ({ channels, setSelectedChannel }: ChannelsInfo) => {
   return (
     <nav id="channel-container">
       <h2>Channels</h2>
+
       {channels.map((channel) => (
-        <div className="channel" key={channel.id}>
-          <button onClick={() => handleChannelClick(channel.name)}>
-            {channel.name}
-          </button>
-        </div>
+        <React.Fragment key={channel.id}>
+          <div className="channel">
+            <button
+              onClick={() => handleChannelClick(channel.name, channel.type)}
+            >
+              {channel.name}
+            </button>
+          </div>
+        </React.Fragment>
       ))}
-      <Code />
     </nav>
   );
 };
-
 export default Channels;

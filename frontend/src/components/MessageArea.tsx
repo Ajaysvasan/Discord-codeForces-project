@@ -1,25 +1,24 @@
-import {useState} from "react";
+import { useState } from "react";
 import Textbox from "./TextBox";
-import Message from "./Message";
+import General from "./General";
 import "./styles/textspace.css";
-interface SelectedChannelName{
-  selectedChannel:string
+interface SelectedChannelName {
+  selectedChannel: string;
 }
-const MessageArea = ({selectedChannel}:SelectedChannelName)=>{
-    const [message , setMessage] = useState("");
-    console.log(selectedChannel);
+const MessageArea = ({ selectedChannel }: SelectedChannelName) => {
+  const [message, setMessage] = useState("");
+  console.log(selectedChannel);
 
-
-  return(
+  return (
     <div className="text-component">
-        <div className="message-area">
-             <Message messageReceived={message} />
-        </div>
-        <div className="input-box">
-            <Textbox setMessage={setMessage} />
-        </div>
+      <div className="message-area">
+        <General messageReceived={message} />
+      </div>
+      <div className="input-box">
+        <Textbox setMessage={setMessage} />
+      </div>
     </div>
   );
-}
+};
 
 export default MessageArea;

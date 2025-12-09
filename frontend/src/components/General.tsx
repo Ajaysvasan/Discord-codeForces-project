@@ -4,14 +4,14 @@ interface MessageReceived {
   messageReceived: string;
 }
 
-const Message = ({ messageReceived }: MessageReceived) => {
+const General = ({ messageReceived }: MessageReceived) => {
   const [messages, setMessages] = useState<string[]>([]);
 
-    console.log(messageReceived);
+  console.log(messageReceived);
 
   useEffect(() => {
-    if (messageReceived &&messageReceived.trim() !== "") {
-      setMessages(prev => [...prev, messageReceived]);
+    if (messageReceived && messageReceived.trim() !== "") {
+      setMessages((prev) => [...prev, messageReceived]);
     }
   }, [messageReceived]);
 
@@ -28,4 +28,4 @@ const Message = ({ messageReceived }: MessageReceived) => {
   );
 };
 
-export default Message;
+export default General;

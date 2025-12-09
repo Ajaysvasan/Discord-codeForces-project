@@ -4,11 +4,12 @@ import "./styles/homePage.css";
 import Server from "../components/Server";
 import Channels from "../components/Channels";
 import MessageArea from "../components/MessageArea";
+import CodeArea from "../components/CodeArea";
 
 const HomePage = () => {
   const [ServerName, setServerName] = useState("");
   const [ChannelName, setChannelName] = useState("");
-
+  const [channelType, setChannelType] = useState("");
   interface Channel {
     id: string;
     name: string;
@@ -49,13 +50,13 @@ const HomePage = () => {
   ];
 
   console.log("The server name is: ", ServerName);
+  console.log("The type of the channel is: ", channelType);
 
   const getServerChannels = (selectedServerName: string, servers: any) => {
     const selectedServer = servers.find(
       (server) => server.serverName === selectedServerName
     );
     const serverChannels = selectedServer.channels;
-    console.log(typeof serverChannels);
     return serverChannels;
   };
 
@@ -76,15 +77,21 @@ const HomePage = () => {
             <Channels
               channels={getServerChannels(ServerName, servers)}
               setSelectedChannel={setChannelName}
+              setChannelType={setChannelType}
             />
           </div>
         )}
       </div>
 
       <div className="text-space-component">
-        {ChannelName !== "" && (
+        {channelType === "text" && (
           <div className="text-space">
             <MessageArea selectedChannel={ChannelName} />
+          </div>
+        )}
+        {channelType === "code" && (
+          <div className="code">
+            <CodeArea />
           </div>
         )}
       </div>
