@@ -1,6 +1,5 @@
 import "./styles/channels.css";
 import React from "react";
-import CodeArea from "./CodeArea";
 interface Channel {
   id: string | number;
   name: string;
@@ -10,11 +9,17 @@ interface Channel {
 interface ChannelsInfo {
   channels: Channel[]; // Changed from object to Channel[]
   setSelectedChannel: (name: string) => void;
+  setChannelType: (channelType: string) => void;
 }
 
-const Channels = ({ channels, setSelectedChannel }: ChannelsInfo) => {
-  const handleChannelClick = (channelName: string) => {
+const Channels = ({
+  setChannelType,
+  channels,
+  setSelectedChannel,
+}: ChannelsInfo) => {
+  const handleChannelClick = (channelName: string, channelType: string) => {
     setSelectedChannel(channelName);
+    setChannelType(channelType);
   };
 
   console.log("channels:", channels);
@@ -25,10 +30,10 @@ const Channels = ({ channels, setSelectedChannel }: ChannelsInfo) => {
 
       {channels.map((channel) => (
         <React.Fragment key={channel.id}>
-          {channel.type === "code" && <CodeArea />}
-
           <div className="channel">
-            <button onClick={() => handleChannelClick(channel.name)}>
+            <button
+              onClick={() => handleChannelClick(channel.name, channel.type)}
+            >
               {channel.name}
             </button>
           </div>

@@ -13,6 +13,10 @@ const languageSupported: string[] = [
 ];
 
 const CodeSpace = ({ getCode }: EditorArguments) => {
+  const handleChange = (value: any) => {
+    setCode(value ?? "");
+    getCode(code);
+  };
   const [code, setCode] = useState("");
   return (
     <div className="editor">
@@ -20,7 +24,7 @@ const CodeSpace = ({ getCode }: EditorArguments) => {
         height="90vh"
         defaultLanguage="cpp"
         value={code}
-        onChange={(value) => setCode(value ?? "")}
+        onChange={(value) => handleChange(value)}
       />
     </div>
   );
