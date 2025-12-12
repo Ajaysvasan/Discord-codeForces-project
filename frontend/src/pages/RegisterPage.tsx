@@ -1,42 +1,100 @@
-import { useEffect } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import "./styles/registerPage.css"
-const RegisterPage = ()=>{
-    const navigate = useNavigate();
-    const handleRegister = (e:React.FormEvent)=>{
-      e.preventDefault();
-      navigate("/home")
+import "./styles/registerPage.css";
+import {
+  validateConfirmPassword,
+  validateEmail,
+  validatePassword,
+} from "../utils/handleRegister";
+const RegisterPage = () => {
+  const navigate = useNavigate();
+  const [userName, setUserName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const handleRegister = (
+    email: string,
+    password: string,
+    confirmPassword: string,
+    e: FormEvent
+  ) => {
+    e.preventDefault();
+    const emailError = validateEmail(email);
+    const PasswordError = validatePassword(password);
+    const confirmPasswordError = validateConfirmPassword(
+      password,
+      confirmPassword
+    );
+    if (
+      emailError != null ||
+      PasswordError != null ||
+      confirmPasswordError != null
+    ) {
+      alert("Enter the correct credentials");
+    } else {
+      console.log(userName);
+      navigate("/home");
     }
-     useEffect(()=>{
-         document.body.style.background = "linear-gradient(#353935 , black)"; 
-         document.body.style.backgroundAttachment = "fixed";
-         document.body.style.backgroundRepeat = "no-repeat";
-         return()=>{
-             document.body.style.background = "";
-         };
-     } , []);
-    return(
+  };
+
+  useEffect(() => {
+    document.body.style.background = "linear-gradient(#353935 , black)";
+    document.body.style.backgroundAttachment = "fixed";
+    document.body.style.backgroundRepeat = "no-repeat";
+    return () => {
+      document.body.style.background = "";
+    };
+  }, []);
+  return (
     <div className="form">
       <h1>Register</h1>
       <div className="container">
-        <form action="">
+        <form
+          action=""
+          onSubmit={(e) => {
+            handleRegister(email, password, confirmPassword, e);
+          }}
+        >
           <div className="input-box">
-            <input type="text" placeholder="Username" required/>
+            <input
+              type="text"
+              placeholder="Username"
+              onChange={(e) => setUserName(e.target.value)}
+              required
+            />
           </div>
           <div className="input-box">
-            <input type="email" placeholder="email" required/>
+            <input
+              type="email"
+              placeholder="email"
+              required
+              onChange={(e) => setEmail(e.target.value)}
+            />
           </div>
           <div className="input-box">
-            <input type="password" placeholder="password" required minLength={6}/>
+            <input
+              type="password"
+              placeholder="password"
+              required
+              onChange={(e) => setPassword(e.target.value)}
+              minLength={6}
+            />
           </div>
           <div className="input-box">
-            <input type="password" placeholder="Confirm password" required minLength={6}/>
+            <input
+              type="password"
+              placeholder="Confirm password"
+              required
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              minLength={6}
+            />
           </div>
-            <button className="btn" onClick={handleRegister}>Register</button>
+          <button className="btn">Register</button>
         </form>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default RegisterPage;
