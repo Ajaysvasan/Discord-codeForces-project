@@ -6,6 +6,7 @@ import {
   validateEmail,
   validatePassword,
 } from "../utils/handleRegister";
+import registerUser from "../services/register";
 const RegisterPage = () => {
   const navigate = useNavigate();
   const [userName, setUserName] = useState("");
@@ -13,12 +14,7 @@ const RegisterPage = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleRegister = (
-    email: string,
-    password: string,
-    confirmPassword: string,
-    e: FormEvent
-  ) => {
+  const handleRegister = async (e: FormEvent) => {
     e.preventDefault();
     const emailError = validateEmail(email);
     const PasswordError = validatePassword(password);
@@ -33,8 +29,15 @@ const RegisterPage = () => {
     ) {
       alert("Enter the correct credentials");
     } else {
-      console.log(userName);
-      navigate("/home");
+      const res = await registerUser({
+        userName: userName,
+        email: email,
+        password: password,
+        confirmPassword: confirmPassword,
+      });
+      console.log(res);
+      if (!res.error) navigate("/home");
+      else alert(res.message);
     }
   };
 
