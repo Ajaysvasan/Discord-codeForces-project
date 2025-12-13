@@ -2,10 +2,13 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect, type FormEvent } from "react";
 import "./styles/loginPage.css";
 import { validateEmail, validatePassword } from "../utils/handleLogin";
+import { loginUser } from "../services/authServive";
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [userName, setUserName] = useState("");
+  const [error, setError] = useState("");
+  const [loading, isLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -23,32 +26,32 @@ const LoginPage = () => {
       setUserName(value);
     }
   };
-
-  const isValidUser = () => {
-    //needs the implementation of DB
-    if (userName) return true;
-  };
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     console.log(email + "\n" + password + "\n" + userName);
     const passwodError: string | null = validatePassword(password);
-    if (email !== "") {
-      const emailError: string | null = validateEmail(email);
-      if (emailError == null && passwodError == null) {
-        // also need to check if the user exsists in the DB or not
-        navigate("/home");
-      } else {
-        alert("The entered email or password is wrong");
-      }
+    const emailError: string | null = validateEmail(email);
+    if (passwodError) {
+      setError(passwodError);
+      return;
+    } else if (emailError && email != "") {
+      setError(emailError);
+      return;
+    }
+    // also need to check if the user exsists in the DB or not
+    console.log("inside the else part ");
+    isLoading(true);
+    const response = await loginUser({
+      identifier: userName || email,
+      password: password,
+    });
+    if (!response.error) {
+      // also need to check if the user exsists in the DB or not
+      isLoading(false);
+      console.log(response);
+      navigate("/home");
     } else {
-      console.log("inside the else part ");
-      const userExsists = isValidUser();
-      if (passwodError == null && userExsists) {
-        // also need to check if the user exsists in the DB or not
-        navigate("/home");
-      } else {
-        alert("The user name or password entered is wrong");
-      }
+      alert(response.message);
     }
   };
 
