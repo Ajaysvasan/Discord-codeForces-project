@@ -28,7 +28,6 @@ const LoginPage = () => {
   };
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    console.log(email + "\n" + password + "\n" + userName);
     const passwodError: string | null = validatePassword(password);
     const emailError: string | null = validateEmail(email);
     if (passwodError) {
