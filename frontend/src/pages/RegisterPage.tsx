@@ -56,7 +56,7 @@ const RegisterPage = () => {
         <form
           action=""
           onSubmit={(e) => {
-            handleRegister(email, password, confirmPassword, e);
+            handleRegister(e);
           }}
         >
           <div className="input-box">

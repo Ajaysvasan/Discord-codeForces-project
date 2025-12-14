@@ -29,6 +29,7 @@ def login(request):
 
 @csrf_exempt
 def register(request):
+    print(request.method)
     if request.method == "POST":
         data = json.loads(request.body)
         user_name = data.get("userName")
@@ -50,4 +51,5 @@ def register(request):
                 {"error": True, "message": "User already exsits. Try logging in!"}
             )
     else:
+        print("I dont know what the fuck happened")
         return JsonResponse({"error": True, "message": "Invalid method type"})
