@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
-import { sendCode } from "./services/sendCode";
 import CodeSpace from "./Editor";
+import { sendCode } from "../services/sendCode";
 const CodeArea = () => {
   const [currentProblemIndex, setCurrentProblemIndex] = useState(0);
   const [isCodeSubmitted, setIsCodeSubmitted] = useState(true);
