@@ -1,7 +1,39 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
+import { sendCode } from "./services/sendCode";
 import CodeSpace from "./Editor";
 const CodeArea = () => {
-  const [code, setCode] = useState("");
+  const [currentProblemIndex, setCurrentProblemIndex] = useState(0);
+  const [isCodeSubmitted, setIsCodeSubmitted] = useState(true);
+  const [selectedLanguage, setSelectedLanguage] = useState("python");
+
+  const codeRef = useRef<string>("");
+  const handleCodeChange = (newCode: string) => {
+    codeRef.current = newCode;
+  };
+
+  console.log(codeRef.current);
+  const handleCodeSubmit = async (pid: number) => {
+    console.log("From CodeArea:", selectedLanguage);
+
+    const payload = {
+      code: codeRef.current,
+      pid: pid,
+      selectedLanguage: selectedLanguage,
+    };
+
+    const response = await sendCode(payload);
+    if (response.success) {
+      setIsCodeSubmitted(true);
+      alert("Code submitted successfully!");
+    } else {
+      setIsCodeSubmitted(false);
+      alert(`Code submission failed: ${response.message}`);
+    }
+  };
+
+  console.log(currentProblemIndex);
+  console.log(isCodeSubmitted);
+
   const problemStatements = [
     {
       pid: 1,
@@ -10,10 +42,9 @@ const CodeArea = () => {
 
 You may assume that each input would have exactly one solution, and you may not use the same element twice.
 
-You can return the answer in any order.
+You can return the answer in any order.`,
 
- 
-
+      examples: `
 Example 1:
 
 Input: nums = [2,7,11,15], target = 9
@@ -26,29 +57,35 @@ Output: [1,2]
 Example 3:
 
 Input: nums = [3,3], target = 6
-Output: [0,1]
- 
+Output: [0,1]`,
 
-Constraints:
-
-2 <= nums.length <= 104
+      Constraints: `2 <= nums.length <= 104
 -109 <= nums[i] <= 109
 -109 <= target <= 109
 Only one valid answer exists.
  
 
-Follow-up: Can you come up with an algorithm that is less than O(n2) time complexity?`,
+Follow-up: Can you come up with an algorithm that is less than O(n3) time complexity?`,
     },
   ];
-  console.log(code);
   return (
     <div className="code-area">
       <div className="problem-statement-container">
         {problemStatements.map((problemStatement) => (
-          <div className="Problem title" key={problemStatement.pid}>
+          <div
+            className="Problem title"
+            key={problemStatement.pid}
+            onClick={() => setCurrentProblemIndex(problemStatement.pid)}
+          >
             <h3> {problemStatement.problemTitle}</h3>
             <div className="question">
               <h4> {problemStatement.question} </h4>
+            </div>
+            <div className="examples">
+              <h4> Examples: {problemStatement.examples} </h4>
+            </div>
+            <div className="constraints">
+              <h4> Constraints: {problemStatement.Constraints} </h4>
             </div>
           </div>
         ))}
@@ -57,8 +94,17 @@ Follow-up: Can you come up with an algorithm that is less than O(n2) time comple
         <button className="prev">Previous</button>
         <button className="next">Next</button>
         <button className="run-test">Run</button>
-        <button className="submit">Submit</button>
-        <CodeSpace getCode={setCode} />
+        <button
+          className="submit"
+          onClick={() => handleCodeSubmit(currentProblemIndex)}
+        >
+          Submit
+        </button>
+        <CodeSpace
+          getCode={handleCodeChange}
+          setLanguageSelected={setSelectedLanguage}
+          selectedLanguage={selectedLanguage}
+        />
       </div>
     </div>
   );

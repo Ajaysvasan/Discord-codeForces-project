@@ -1,8 +1,10 @@
 import { Editor } from "@monaco-editor/react";
 import DropDown from "./DropDown";
-import { useState } from "react";
+import { useRef } from "react";
 interface EditorArguments {
   getCode: (code: string) => void;
+  setLanguageSelected?: (name: string) => void;
+  selectedLanguage?: string;
 }
 
 const languageSupported: string[] = [
@@ -13,16 +15,19 @@ const languageSupported: string[] = [
   "javascript",
 ];
 
-const CodeSpace = ({ getCode }: EditorArguments) => {
-  const [langaugeSelected, setLanguageSelected] = useState("");
-  console.log(langaugeSelected);
+const CodeSpace = ({
+  getCode,
+  setLanguageSelected,
+  selectedLanguage,
+}: EditorArguments) => {
+  console.log("from code editor , Selected Language:", selectedLanguage);
+  const codeRef = useRef<string>("");
   const handleChange = (value: any) => {
-    setCode(value ?? "");
-    getCode(code);
+    getCode(value);
   };
-  const [code, setCode] = useState("");
+  console.log(codeRef.current);
   return (
-    <div className="editor">
+    <div className="editor" onSubmit={(e) => e.preventDefault()}>
       <div className="language">
         <DropDown
           title="language"
@@ -32,8 +37,8 @@ const CodeSpace = ({ getCode }: EditorArguments) => {
       </div>
       <Editor
         height="90vh"
-        defaultLanguage="cpp"
-        value={code}
+        defaultLanguage={selectedLanguage || "python"}
+        value={codeRef.current}
         onChange={(value) => handleChange(value)}
       />
     </div>
