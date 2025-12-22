@@ -36,7 +36,7 @@ const CodeSpace = ({
         />
       </div>
       <Editor
-        height="90vh"
+        height="60vh"
         defaultLanguage={selectedLanguage || "python"}
         value={codeRef.current}
         onChange={(value) => handleChange(value)}

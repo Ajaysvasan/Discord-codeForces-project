@@ -3,8 +3,8 @@ import "../App.css";
 import "./styles/homePage.css";
 import Server from "../components/Server";
 import Channels from "../components/Channels";
-import MessageArea from "../components/MessageArea";
-import CodeArea from "../components/codeArea/CodeArea";
+import MessageArea from "../components/chatSection/MessageArea";
+import CodeArea from "../components/codeSection/CodeArea";
 const HomePage = () => {
   const [ServerName, setServerName] = useState("");
   const [ChannelName, setChannelName] = useState("");

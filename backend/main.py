@@ -37,6 +37,8 @@ class CodeSubmissionData(BaseModel):
     pid: int
     code: str
     selectedLanguage: str
+    mode: str
+    teamId: str | None = None
 
 
 @app.post("/api/login/")
@@ -58,20 +60,39 @@ def register(data: RegisterData):
     return {"error": False, "message": "Registration successful"}
 
 
+# this one just updates the submissionn status after sandboxing
+# also this ensures that if the mode is run then only the visible test cases are executed
+# if it is submit then all test cases are executed and the code is updated and stored in the database
+# and the leaderboards are updated accordingly
 @app.post("/api/submit-code/")
 def submit_code(code_data: CodeSubmissionData):
-    problem_id = code_data.pid
-    code = code_data.code
-    selected_language = code_data.selectedLanguage
-    print(f"Problem ID: {problem_id}, Language: {selected_language}")
-    print(f"Code: {code}")
-    # Code submission logic goes here
-    result = run_code(selected_language, code)
-    print(f"Sandboxing result: {result}")
-    # sandbxing to be precise
+    try:
+        problem_id = code_data.pid
+        code = code_data.code
+        selected_language = code_data.selectedLanguage
+        mode = code_data.mode
+        # Code submission logic goes here
+        if code_data.mode not in ["run", "submit"]:
+            return {"success": False, "message": "Invalid mode"}
+        result = run_code(selected_language, code, problem_id, mode)
+        # Logic for submitting code and running all test cases
+        # logic for updating database and leaderboards
+        # sandbxing to be precise
 
-    return (
-        {"success": True, "message": "Code executed successfully"}
-        if result["exit_code"] != -1
-        else {"success": False, "output": result["stdout"]}
-    )
+        return (
+            {
+                "success": True,
+                "message": "Code submitted successfully",
+                "output": result["stdout"],
+                "errors": result["stderr"],
+            }
+            if result["exit_code"] == 0
+            else {
+                "success": False,
+                "error": result["stderr"],
+                "message": "Code execution failed",
+                "output": result["stdout"],
+            }
+        )
+    except Exception as e:
+        return {"success": False, "message": str(e)}

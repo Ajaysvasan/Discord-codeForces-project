@@ -2,10 +2,18 @@ interface codePayload {
   code: string;
   pid: number;
   selectedLanguage: string;
+  mode: string;
+  teamId?: string;
 }
 interface sendCodeResponse {
   success: boolean;
   message: string;
+  // code id is going to be team id + problem id + the total submissions count for that problem by that team
+  // which will be implemented later and this can be done in the frontend doesn't have to be sent from the backend
+  codeId?: string;
+  output?: string;
+  error?: string;
+  hiddenTestsPassed?: number;
 }
 export const sendCode = async (
   payload: codePayload
@@ -26,6 +34,7 @@ export const sendCode = async (
     return {
       success: true,
       message: data.message || "Code submitted successfully",
+      codeId: data.codeId, // Placeholder codeId; replace with actual logic as needed,
     };
   } catch (error) {
     return {

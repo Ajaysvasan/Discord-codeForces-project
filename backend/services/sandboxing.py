@@ -5,7 +5,9 @@ import tempfile
 from languages import LANG_CONFIG
 
 
-def run_code(language: str, code: str, timeout=5):
+def run_code(
+    language: str, code: str, timeout=5, problem_id: str = "", mode: str = "run"
+):
     if language not in LANG_CONFIG:
         return {
             "stdout": "",
@@ -14,6 +16,8 @@ def run_code(language: str, code: str, timeout=5):
         }
 
     cfg = LANG_CONFIG[language]
+    # getting the test cases logic goes here and based on the mode the number of test cases that are to be run i.e the visible ones or the hidden ones will be determined
+    # each test case will contain a flag called is_visible to determine if it is visible or not
 
     with tempfile.TemporaryDirectory() as tmp:
         src_path = os.path.join(tmp, cfg["source_file"])

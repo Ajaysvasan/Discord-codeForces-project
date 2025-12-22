@@ -1,10 +1,14 @@
 import { useState, useRef } from "react";
-import CodeSpace from "./Editor";
-import { sendCode } from "../services/sendCode";
+import CodeSpace from "./CodeSpace";
+import TestCase from "./TestCase";
+import handleNextAndPrev from "../../services/handleNextAndPrev";
+import { sendCode } from "../../services/sendCode";
 const CodeArea = () => {
   const [currentProblemIndex, setCurrentProblemIndex] = useState(0);
   const [isCodeSubmitted, setIsCodeSubmitted] = useState(true);
   const [selectedLanguage, setSelectedLanguage] = useState("python");
+  const [output, setOutput] = useState("");
+  const [codeError, setCodeError] = useState("");
 
   const codeRef = useRef<string>("");
   const handleCodeChange = (newCode: string) => {
@@ -12,22 +16,27 @@ const CodeArea = () => {
   };
 
   console.log(codeRef.current);
-  const handleCodeSubmit = async (pid: number) => {
-    console.log("From CodeArea:", selectedLanguage);
-
+  const handleCodeSubmit = async (pid: number, mode: string) => {
     const payload = {
       code: codeRef.current,
       pid: pid,
       selectedLanguage: selectedLanguage,
+      mode: mode,
     };
 
     const response = await sendCode(payload);
+    console.log("Code submission response:", response);
     if (response.success) {
       setIsCodeSubmitted(true);
-      alert("Code submitted successfully!");
-    } else {
-      setIsCodeSubmitted(false);
-      alert(`Code submission failed: ${response.message}`);
+      if (mode === "run") {
+        setOutput(response.output || "");
+        setCodeError(response.error || "");
+      } else if (mode === "submit") {
+        setOutput(
+          `Code submitted successfully. Hidden Test Cases Passed: ${response.hiddenTestsPassed}`
+        );
+        setCodeError("");
+      }
     }
   };
 
@@ -91,12 +100,21 @@ Follow-up: Can you come up with an algorithm that is less than O(n3) time comple
         ))}
       </div>
       <div className="editor-container">
-        <button className="prev">Previous</button>
-        <button className="next">Next</button>
-        <button className="run-test">Run</button>
+        <button className="prev" onClick={() => setOutput("")}>
+          Previous
+        </button>
+        <button className="next" onClick={() => setOutput("")}>
+          Next
+        </button>
+        <button
+          className="run-test"
+          onClick={() => handleCodeSubmit(currentProblemIndex, "run")}
+        >
+          Run
+        </button>
         <button
           className="submit"
-          onClick={() => handleCodeSubmit(currentProblemIndex)}
+          onClick={() => handleCodeSubmit(currentProblemIndex, "submit")}
         >
           Submit
         </button>
@@ -105,6 +123,11 @@ Follow-up: Can you come up with an algorithm that is less than O(n3) time comple
           setLanguageSelected={setSelectedLanguage}
           selectedLanguage={selectedLanguage}
         />
+        <div className="output-section">
+          <div className="test-cases">
+            <TestCase output={output} error={codeError} />
+          </div>
+        </div>
       </div>
     </div>
   );

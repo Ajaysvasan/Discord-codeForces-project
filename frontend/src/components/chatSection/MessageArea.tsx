@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Textbox from "./TextBox";
 import General from "./General";
-import "./styles/textspace.css";
+import "../styles/textspace.css";
 interface SelectedChannelName {
   selectedChannel: string;
 }
