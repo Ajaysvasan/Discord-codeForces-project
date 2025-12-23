@@ -22,8 +22,6 @@ const Channels = ({
     setChannelType(channelType);
   };
 
-  console.log("channels:", channels);
-
   return (
     <nav id="channel-container">
       <h2>Channels</h2>

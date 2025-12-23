@@ -15,7 +15,6 @@ const CodeArea = () => {
     codeRef.current = newCode;
   };
 
-  console.log(codeRef.current);
   const handleCodeSubmit = async (pid: number, mode: string) => {
     const payload = {
       code: codeRef.current,
@@ -25,7 +24,6 @@ const CodeArea = () => {
     };
 
     const response = await sendCode(payload);
-    console.log("Code submission response:", response);
     if (response.success) {
       setIsCodeSubmitted(true);
       if (mode === "run") {
@@ -39,9 +37,6 @@ const CodeArea = () => {
       }
     }
   };
-
-  console.log(currentProblemIndex);
-  console.log(isCodeSubmitted);
 
   const problemStatements = [
     {

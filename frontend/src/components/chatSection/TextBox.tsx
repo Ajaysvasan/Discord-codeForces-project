@@ -12,9 +12,6 @@ const Textbox = ({ setMessage }: TextBoxArguments) => {
       setInputValue("");
     }
   };
-
-  console.log(inputValue);
-
   return (
     <div className="input-field" onChange={(e) => e.preventDefault}>
       <input

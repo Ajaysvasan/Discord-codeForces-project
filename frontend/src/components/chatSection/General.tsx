@@ -7,15 +7,11 @@ interface MessageReceived {
 const General = ({ messageReceived }: MessageReceived) => {
   const [messages, setMessages] = useState<string[]>([]);
 
-  console.log(messageReceived);
-
   useEffect(() => {
     if (messageReceived && messageReceived.trim() !== "") {
       setMessages((prev) => [...prev, messageReceived]);
     }
   }, [messageReceived]);
-
-  console.log(messages);
 
   return (
     <div className="Message-container">

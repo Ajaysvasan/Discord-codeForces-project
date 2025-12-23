@@ -20,12 +20,10 @@ const CodeSpace = ({
   setLanguageSelected,
   selectedLanguage,
 }: EditorArguments) => {
-  console.log("from code editor , Selected Language:", selectedLanguage);
   const codeRef = useRef<string>("");
   const handleChange = (value: any) => {
     getCode(value);
   };
-  console.log(codeRef.current);
   return (
     <div className="editor" onSubmit={(e) => e.preventDefault()}>
       <div className="language">

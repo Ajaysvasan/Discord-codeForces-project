@@ -1,23 +1,20 @@
-import "../App.css"
+import "../App.css";
 import "./styles/server.css";
 
-interface ServerProps{
-  server:string;
-  onSelectedServer:(name:string)=>void;
+interface ServerProps {
+  server: string;
+  onSelectedServer: (name: string) => void;
 }
 
-const Server = ({server , onSelectedServer}:ServerProps)=>{
-  console.log(server);
-const handleClick = () => onSelectedServer(server);
+const Server = ({ server, onSelectedServer }: ServerProps) => {
+  const handleClick = () => onSelectedServer(server);
 
-return (
+  return (
     <div className="server">
-  <button className="server-btn" onClick={handleClick}>
-    {server}
-  </button>
-  </div>
-);
-
-}
+      <button className="server-btn" onClick={handleClick}>
+        {server}
+      </button>
+    </div>
+  );
+};
 export default Server;
-

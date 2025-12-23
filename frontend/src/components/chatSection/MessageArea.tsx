@@ -7,8 +7,6 @@ interface SelectedChannelName {
 }
 const MessageArea = ({ selectedChannel }: SelectedChannelName) => {
   const [message, setMessage] = useState("");
-  console.log(selectedChannel);
-
   return (
     <div className="text-component">
       <div className="message-area">
