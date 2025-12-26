@@ -30,7 +30,6 @@ export const sendCode = async (
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const data = await response.json();
-    console.log("Response data:", data);
     return {
       success: true,
       message: data.message || "Code submitted successfully",

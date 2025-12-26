@@ -5,7 +5,6 @@ interface CodeResult {
   error?: string;
 }
 export const getCodeResult = async (codeId: string): Promise<CodeResult> => {
-  console.log("Fetching results for the code ID: ", codeId);
   const codeResult = await fetch(
     `http://127.0.0.1:8000/api/code-result/${codeId}`,
     {

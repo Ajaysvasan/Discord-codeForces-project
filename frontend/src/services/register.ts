@@ -27,7 +27,6 @@ const registerUser = async (
     }
     return await res.json();
   } catch (error) {
-    console.log(error);
     return {
       error: true,
       message: "Server or network error",

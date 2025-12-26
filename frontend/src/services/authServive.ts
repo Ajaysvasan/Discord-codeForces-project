@@ -25,7 +25,6 @@ export const loginUser = async (
 
     return await res.json();
   } catch (err) {
-    console.log(err);
     return {
       error: true,
       message: "Network or server error",
