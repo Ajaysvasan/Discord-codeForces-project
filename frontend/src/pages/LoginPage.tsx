@@ -38,7 +38,6 @@ const LoginPage = () => {
       return;
     }
     // also need to check if the user exsists in the DB or not
-    console.log("inside the else part ");
     isLoading(true);
     const response = await loginUser({
       identifier: userName || email,
@@ -47,7 +46,6 @@ const LoginPage = () => {
     if (!response.error) {
       // also need to check if the user exsists in the DB or not
       isLoading(false);
-      console.log(response);
       navigate("/home");
     } else {
       alert(response.message);

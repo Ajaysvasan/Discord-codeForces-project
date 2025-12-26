@@ -48,9 +48,6 @@ const HomePage = () => {
     },
   ];
 
-  console.log("The server name is: ", ServerName);
-  console.log("The type of the channel is: ", channelType);
-
   const getServerChannels = (selectedServerName: string, servers: any) => {
     const selectedServer = servers.find(
       (server) => server.serverName === selectedServerName
