@@ -1,6 +1,8 @@
 import os
 import sys
+from datetime import date
 
+from config import settings
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -8,6 +10,7 @@ from pydantic import BaseModel
 module_dir = os.path.join(os.path.dirname(__file__), "services")
 sys.path.append(module_dir)
 
+from db_services.db_service import DBService
 from services.sandboxing import run_code
 
 app = FastAPI(title="Discord_codeforces project")
@@ -19,6 +22,14 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+DB_config = {
+    "host": settings.DB_HOST,
+    "port": settings.DB_PORT,
+    "database": settings.DB_NAME,
+    "user": settings.DB_USER,
+    "password": settings.DB_PASSWORD,
+}
 
 
 class LoginData(BaseModel):
@@ -46,6 +57,7 @@ def login(data: LoginData):
     print(type(data))
     user_name = data.identifier
     password = data.password
+    db = DBService(db_config=DB_config)
     # DB Logic goes here
     return {"error": False, "message": "Hello from fast api"}
 
@@ -57,6 +69,31 @@ def register(data: RegisterData):
     password = data.password
     confirm_password = data.confirmPassword
     # registration logic goes here
+    try:
+        if password != confirm_password:
+            return {"error": True, "message": "Passwords do not match"}
+        db = DBService(db_config=DB_config)
+        hashed_password = ""
+        created_at = date.today()
+        try:
+            get_last_id = "select id from users order by users desc limit 1"
+            last_id = db.execute_query(get_last_id, all=False)
+            insert_user_details = "insert into users(id , name , email , password , created_at) values (%s , %s , %s , %s ,%s);"
+            if (last_id) == None:
+                db.insert_values(
+                    insert_user_details,
+                    (1, user_name, email, hashed_password, created_at),
+                )
+            else:
+                db.insert_values(
+                    insert_user_details,
+                    (last_id[0] + 1, user_name, email, hashed_password, created_at),
+                )
+
+        except Exception as e:
+            return {"error": True, "message": str(e)}
+    except Exception as e:
+        return {"error": True, "message": str(e)}
     return {"error": False, "message": "Registration successful"}
 
 
