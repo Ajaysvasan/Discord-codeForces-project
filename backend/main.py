@@ -5,7 +5,9 @@ from datetime import date
 from config import settings
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from psycopg2.sql import Identifier
 from pydantic import BaseModel
+from security.hashing import hash
 
 module_dir = os.path.join(os.path.dirname(__file__), "services")
 sys.path.append(module_dir)
@@ -55,8 +57,10 @@ class CodeSubmissionData(BaseModel):
 @app.post("/api/login/")
 def login(data: LoginData):
     print(type(data))
-    user_name = data.identifier
+    user_email = data.identifier
     password = data.password
+    hashed_password = hash(password)
+    print(" The hashed password is working")
     db = DBService(db_config=DB_config)
     # DB Logic goes here
     return {"error": False, "message": "Hello from fast api"}
