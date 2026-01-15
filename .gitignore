@@ -30,3 +30,5 @@ __pycache__
 db.sqlite3
 .git
 db_services/
+
+.env_backup
