@@ -28,6 +28,7 @@ const LoginPage = () => {
   };
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    console.log(email, password);
     const passwodError: string | null = validatePassword(password);
     const emailError: string | null = validateEmail(email);
     if (passwodError) {
@@ -40,7 +41,7 @@ const LoginPage = () => {
     // also need to check if the user exsists in the DB or not
     isLoading(true);
     const response = await loginUser({
-      identifier: userName || email,
+      identifier: email,
       password: password,
     });
     if (!response.error) {
@@ -59,8 +60,8 @@ const LoginPage = () => {
         <form action="" onSubmit={(e) => handleSubmit(e)}>
           <div className="input-box">
             <input
-              type="text"
-              placeholder="Username /email"
+              type="email"
+              placeholder="email"
               required
               onChange={(e) => handleUserName(e.target.value)}
             />

@@ -12,6 +12,7 @@ export const loginUser = async (
   payLoad: LoginPayLoad
 ): Promise<LoginSession> => {
   try {
+    console.log("loginUser payload:", payLoad);
     const res = await fetch("http://127.0.0.1:8000/api/login/", {
       method: "POST",
       headers: {

@@ -3,14 +3,15 @@ import sys
 from datetime import date
 
 from config import settings
-from db import Session
 from db.session import engine, get_db
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from models.users import User
 from psycopg2.sql import Identifier
 from pydantic import BaseModel
-from security.hashing import hash
+from security.hashing import hash, verify
 from sqlalchemy import text
+from sqlalchemy.orm import Session
 
 module_dir = os.path.join(os.path.dirname(__file__), "services")
 sys.path.append(module_dir)
@@ -57,18 +58,19 @@ class CodeSubmissionData(BaseModel):
 
 
 @app.post("/api/login/")
-def login(data: LoginData):
+def login(data: LoginData, db: Session = Depends(get_db)):
     user_email = data.identifier
     password = data.password
-    hashed_password = hash(password)
-    with engine.connect() as conn:
-        result = conn.execute(
-            text("select id from users where email=:email and password=:password"),
-            {"email": user_email, "password": hashed_password},
-        )
-        print(result)
+    print(user_email, password)
+    print(len(user_email), len(password))
+    result = db.query(User).filter(User.email == user_email).first()
+    if result is None:
+        return {"error": True, "message": "User does not exist"}
+    hashed_password = result.password
+    if not verify(hashed_password, password):
+        return {"error": True, "message": "Invalid credentials"}
     # DB Logic goes here
-    return {"error": False, "message": "Hello from fast api"}
+    return {"error": False, "message": "Login successful"}
 
 
 @app.post("/api/register/")
@@ -77,38 +79,29 @@ def register(data: RegisterData, db: Session = Depends(get_db)):
     email = data.email
     password = data.password
     confirm_password = data.confirmPassword
-    print(data)
     # registration logic goes here
     try:
         if password != confirm_password:
             return {"error": True, "message": "Passwords do not match"}
 
-        created_at = date.today()
+        created_at = str(date.today())
+        # check if the email already exists
+        result = db.query(User).filter(User.email == email).first()
+        if result is not None:
+            return {"error": True, "message": "Email already exists"}
         try:
             # The hash funtion is build using argon2
             hased_password = hash(password)
-            with engine.connect() as conn:
-                get_id = conn.execute(
-                    text("select id from users order by id desc limit 1"),
-                )
-
-                if get_id.scalar() is not None:
-                    new_id = get_id.scalar() + 1
-                else:
-                    new_id = 1
-            with engine.connect() as conn:
-                conn.execute(
-                    text(
-                        "insert into users (id, name, email, password, created_at) values (:id,:name, :email, :password, :created_at)"
-                    ),
-                    {
-                        "id": new_id,
-                        "name": user_name,
-                        "email": email,
-                        "password": hased_password,
-                        "created_at": created_at,
-                    },
-                )
+            # inserting the user in the db
+            new_user = User(
+                name=user_name,
+                email=email,
+                password=hased_password,
+                created_at=str(created_at),
+            )
+            db.add(new_user)
+            db.commit()
+            db.refresh(new_user)
         except Exception as e:
             print(e)
             return {"error": True, "message": str(e)}

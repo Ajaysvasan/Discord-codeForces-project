@@ -22,6 +22,7 @@ const RegisterPage = () => {
       password,
       confirmPassword
     );
+    console.log(email, password, confirmPassword);
     if (
       emailError != null ||
       PasswordError != null ||
@@ -35,6 +36,7 @@ const RegisterPage = () => {
         password: password,
         confirmPassword: confirmPassword,
       });
+
       if (!res.error) navigate("/home");
       else alert(res.message);
     }

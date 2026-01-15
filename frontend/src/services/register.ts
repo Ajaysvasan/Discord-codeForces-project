@@ -15,6 +15,7 @@ const registerUser = async (
   payLoad: RegisterPayLoad
 ): Promise<RegisterSession> => {
   try {
+    console.log("registerUser payload:", payLoad);
     const res = await fetch("http://127.0.0.1:8000/api/register/", {
       method: "POST",
       headers: {
@@ -29,7 +30,7 @@ const registerUser = async (
   } catch (error) {
     return {
       error: true,
-      message: "Server or network error",
+      message: "Server or network error" + error,
     };
   }
 };
