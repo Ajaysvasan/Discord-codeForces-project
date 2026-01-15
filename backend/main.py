@@ -3,16 +3,18 @@ import sys
 from datetime import date
 
 from config import settings
-from fastapi import FastAPI
+from db import Session
+from db.session import engine, get_db
+from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from psycopg2.sql import Identifier
 from pydantic import BaseModel
 from security.hashing import hash
+from sqlalchemy import text
 
 module_dir = os.path.join(os.path.dirname(__file__), "services")
 sys.path.append(module_dir)
 
-from db_services.db_service import DBService
 from services.sandboxing import run_code
 
 app = FastAPI(title="Discord_codeforces project")
@@ -56,47 +58,62 @@ class CodeSubmissionData(BaseModel):
 
 @app.post("/api/login/")
 def login(data: LoginData):
-    print(type(data))
     user_email = data.identifier
     password = data.password
     hashed_password = hash(password)
-    print(" The hashed password is working")
-    db = DBService(db_config=DB_config)
+    with engine.connect() as conn:
+        result = conn.execute(
+            text("select id from users where email=:email and password=:password"),
+            {"email": user_email, "password": hashed_password},
+        )
+        print(result)
     # DB Logic goes here
     return {"error": False, "message": "Hello from fast api"}
 
 
 @app.post("/api/register/")
-def register(data: RegisterData):
+def register(data: RegisterData, db: Session = Depends(get_db)):
     user_name = data.userName
     email = data.email
     password = data.password
     confirm_password = data.confirmPassword
+    print(data)
     # registration logic goes here
     try:
         if password != confirm_password:
             return {"error": True, "message": "Passwords do not match"}
-        db = DBService(db_config=DB_config)
-        hashed_password = ""
+
         created_at = date.today()
         try:
-            get_last_id = "select id from users order by users desc limit 1"
-            last_id = db.execute_query(get_last_id, all=False)
-            insert_user_details = "insert into users(id , name , email , password , created_at) values (%s , %s , %s , %s ,%s);"
-            if (last_id) == None:
-                db.insert_values(
-                    insert_user_details,
-                    (1, user_name, email, hashed_password, created_at),
-                )
-            else:
-                db.insert_values(
-                    insert_user_details,
-                    (last_id[0] + 1, user_name, email, hashed_password, created_at),
+            # The hash funtion is build using argon2
+            hased_password = hash(password)
+            with engine.connect() as conn:
+                get_id = conn.execute(
+                    text("select id from users order by id desc limit 1"),
                 )
 
+                if get_id.scalar() is not None:
+                    new_id = get_id.scalar() + 1
+                else:
+                    new_id = 1
+            with engine.connect() as conn:
+                conn.execute(
+                    text(
+                        "insert into users (id, name, email, password, created_at) values (:id,:name, :email, :password, :created_at)"
+                    ),
+                    {
+                        "id": new_id,
+                        "name": user_name,
+                        "email": email,
+                        "password": hased_password,
+                        "created_at": created_at,
+                    },
+                )
         except Exception as e:
+            print(e)
             return {"error": True, "message": str(e)}
     except Exception as e:
+        print(e)
         return {"error": True, "message": str(e)}
     return {"error": False, "message": "Registration successful"}
 
@@ -112,10 +129,10 @@ def submit_code(code_data: CodeSubmissionData):
         code = code_data.code
         selected_language = code_data.selectedLanguage
         mode = code_data.mode
-        # Code submission logic goes here
         if code_data.mode not in ["run", "submit"]:
             return {"success": False, "message": "Invalid mode"}
         result = run_code(selected_language, code, problem_id, mode)
+        print(result)
         # Logic for submitting code and running all test cases
         # logic for updating database and leaderboards
         # sandbxing to be precise
