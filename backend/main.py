@@ -115,7 +115,13 @@ def register(data: RegisterData, db: Session = Depends(get_db)):
     except Exception as e:
         print(e)
         return {"error": True, "message": str(e)}
-    return {"error": False, "message": "Registration successful"}
+    access_token = create_access_token(str(new_user.id))
+    return {
+        "error": False,
+        "message": "Registration successful",
+        "sessionToken": access_token,
+        "type": "bearer",
+    }
 
 
 @app.get("/api/get_message/")

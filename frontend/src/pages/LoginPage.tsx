@@ -37,15 +37,12 @@ const LoginPage = () => {
       setError(emailError);
       return;
     }
-    // also need to check if the user exsists in the DB or not
     isLoading(true);
     const response = await loginUser({
       identifier: email,
       password: password,
     });
-    console.log(response);
     if (!response.error) {
-      // also need to check if the user exsists in the DB or not
       isLoading(false);
       navigate("/home");
     } else {
