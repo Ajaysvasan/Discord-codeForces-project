@@ -28,7 +28,6 @@ const LoginPage = () => {
   };
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    console.log(email, password);
     const passwodError: string | null = validatePassword(password);
     const emailError: string | null = validateEmail(email);
     if (passwodError) {
@@ -44,6 +43,7 @@ const LoginPage = () => {
       identifier: email,
       password: password,
     });
+    console.log(response);
     if (!response.error) {
       // also need to check if the user exsists in the DB or not
       isLoading(false);

@@ -3,14 +3,13 @@ import sys
 from datetime import date
 
 from config import settings
-from db.session import engine, get_db
-from fastapi import Depends, FastAPI
+from db.session import get_db
+from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from models.users import User
-from psycopg2.sql import Identifier
 from pydantic import BaseModel
 from security.hashing import hash, verify
-from sqlalchemy import text
+from security.jwt import create_access_token
 from sqlalchemy.orm import Session
 
 module_dir = os.path.join(os.path.dirname(__file__), "services")
@@ -61,16 +60,24 @@ class CodeSubmissionData(BaseModel):
 def login(data: LoginData, db: Session = Depends(get_db)):
     user_email = data.identifier
     password = data.password
-    print(user_email, password)
-    print(len(user_email), len(password))
     result = db.query(User).filter(User.email == user_email).first()
     if result is None:
         return {"error": True, "message": "User does not exist"}
     hashed_password = result.password
     if not verify(hashed_password, password):
         return {"error": True, "message": "Invalid credentials"}
-    # DB Logic goes here
-    return {"error": False, "message": "Login successful"}
+    user_id = result.id
+    try:
+        access_token = create_access_token(str(user_id))
+        return {
+            "error": False,
+            "message": "Login successful",
+            "sessionToken": access_token,
+            "type": "bearer",
+        }
+    except Exception as e:
+        print(e)
+        return {"error": True, "message": f"The following exception occured {e}"}
 
 
 @app.post("/api/register/")
@@ -109,6 +116,16 @@ def register(data: RegisterData, db: Session = Depends(get_db)):
         print(e)
         return {"error": True, "message": str(e)}
     return {"error": False, "message": "Registration successful"}
+
+
+@app.get("/api/get_message/")
+def get_message():
+    pass
+
+
+@app.post("/api/post_message")
+def post_message():
+    pass
 
 
 # this one just updates the submissionn status after sandboxing
