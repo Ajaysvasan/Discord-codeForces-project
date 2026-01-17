@@ -9,6 +9,7 @@ interface RegisterSession {
   error: boolean;
   message?: string;
   sessionToken?: string;
+  type?: string;
 }
 
 const registerUser = async (

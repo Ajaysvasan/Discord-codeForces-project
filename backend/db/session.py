@@ -21,7 +21,7 @@ def get_db() -> Generator[Session, None, None]:
     try:
         yield db
     except Exception as e:
-        print(e)
+        raise e
     finally:
         db.close()
 

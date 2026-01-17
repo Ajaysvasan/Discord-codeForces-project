@@ -12,3 +12,7 @@ def create_access_token(subject: str) -> str:
     expire = datetime.utcnow() + timedelta(JWT_ACCESS_TOKEN_EXPIRE_MINUTIES)
     payload = {"sub": subject, "exp": expire}
     return jwt.encode(payload, JWT_KEY, ALGORITHM)
+
+
+def verify_access_token(token: str) -> bool:
+    return True
