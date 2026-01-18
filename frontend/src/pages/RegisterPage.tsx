@@ -36,6 +36,7 @@ const RegisterPage = () => {
         password: password,
         confirmPassword: confirmPassword,
       });
+      console.log(res);
 
       if (!res.error) navigate("/home");
       else alert(res.message);

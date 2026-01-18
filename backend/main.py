@@ -4,13 +4,13 @@ from datetime import date
 
 from config import settings
 from db.session import get_db
-from fastapi import Depends, FastAPI
+from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from logger import logger
 from models.users import User
 from pydantic import BaseModel
 from security.hashing import hash, verify
-from security.jwt import create_access_token, verify_access_token
+from security.jwt import create_access_token, create_refresh_token, verify_access_token
 from sqlalchemy.orm import Session
 
 module_dir = os.path.join(os.path.dirname(__file__), "services")
@@ -50,6 +50,7 @@ class RegisterData(BaseModel):
 
 
 class CodeSubmissionData(BaseModel):
+    access_token: str
     pid: int
     code: str
     selectedLanguage: str
@@ -70,14 +71,18 @@ def login(data: LoginData, db: Session = Depends(get_db)):
     result = db.query(User).filter(User.email == user_email).first()
     if result is None:
         logger.warning(f"The user does not exsists")
-        return {"error": True, "message": "User does not exist"}
-    hashed_password = result.password
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="User does not exists"
+        )
     if not verify(hashed_password, password):
         logger.warning(f"Invalid credentials has been entered")
-        return {"error": True, "message": "Invalid credentials"}
+        raise HTTPException(
+            status_code=status.HTTP_401_NOT_FOUND, detail="Invalid credentials"
+        )
+
     user_id = result.id
     try:
-        access_token = create_access_token(str(user_id))
+        access_token = create_refresh_token(str(user_id))
         logger.info(f"Loggin  is successful for the user {data.identifier}")
         return {
             "error": False,
@@ -87,7 +92,10 @@ def login(data: LoginData, db: Session = Depends(get_db)):
         }
     except Exception as e:
         logger.exception(f"The following Exception occured during login {e}")
-        return {"error": True, "message": f"Internal server error"}
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal server error",
+        )
 
 
 @app.post("/api/register/")
@@ -102,14 +110,19 @@ def register(data: RegisterData, db: Session = Depends(get_db)):
     try:
         if password != confirm_password:
             logger.warning("The passwords did not match")
-            return {"error": True, "message": "Passwords do not match"}
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT, detail="Passwords don't match"
+            )
 
         created_at = str(date.today())
         # check if the email already exists
         result = db.query(User).filter(User.email == email).first()
         if result is not None:
             logger.warning(f"The user with the mail id {data.email}")
-            return {"error": True, "message": "Email already exists"}
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="User already exsists. Try logging in",
+            )
         try:
             # The hash funtion is build using argon2
             hased_password = hash(password)
@@ -128,32 +141,23 @@ def register(data: RegisterData, db: Session = Depends(get_db)):
             )
         except Exception as e:
             logger.exception(f"The following exception occured while registration :{e}")
-            return {"error": True, "message": "Internal server error"}
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Internal server error",
+            )
     except Exception as e:
         logger.exception(f"The following exception occured while registration :{e}")
-        return {"error": True, "message": "Internal server error"}
-    access_token = create_access_token(str(new_user.id))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="interval server error",
+        )
+    access_token = create_refresh_token(str(new_user.id))
     return {
         "error": False,
         "message": "Registration successful",
         "sessionToken": access_token,
         "type": "bearer",
     }
-
-
-@app.get("/api/verify-token/")
-def token_validation(token: SessionToken):
-    # ToDo define a function that verifies the token
-    logger.info(f"verifying session token")
-    if verify_access_token(token.sessionToken):
-        logger.info("The session token is valid")
-        return {"token": token.sessionToken, "message": "the token is valid"}
-    else:
-        logger.info("The session token is invaid. New token generated")
-        return {
-            "token": create_access_token(str(token.uid)),
-            "message": "The token is invaid. New token generated",
-        }
 
 
 @app.get("/api/get_message/")
@@ -173,6 +177,8 @@ def post_message():
 @app.post("/api/submit-code/")
 def submit_code(code_data: CodeSubmissionData):
     logger.info(f"Attempt to run the code by the user")
+    if not verify_access_token(code_data.access_token):
+        return {}
     try:
         problem_id = code_data.pid
         code = code_data.code
@@ -195,7 +201,7 @@ def submit_code(code_data: CodeSubmissionData):
             }
 
         else:
-            logger.info(f"The code execution failed!")
+            logger.info(f"Code failed to run on some test cases")
             return {
                 "success": False,
                 "error": result["stderr"],
@@ -205,4 +211,7 @@ def submit_code(code_data: CodeSubmissionData):
 
     except Exception as e:
         logger.warning(f"The following exception occured")
-        return {"success": False, "message": "Internal server error"}
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal server error",
+        )

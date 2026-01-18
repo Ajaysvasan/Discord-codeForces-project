@@ -9,6 +9,7 @@ interface RegisterSession {
   error: boolean;
   message?: string;
   sessionToken?: string;
+  refreshToken?: string;
   type?: string;
 }
 
@@ -24,14 +25,16 @@ const registerUser = async (
       },
       body: JSON.stringify(payLoad),
     });
-    if (!res.ok) {
-      throw new Error("Registeration failed");
+    if (res.status === 409) {
+      throw new Error("Conflit");
+    } else if (res.status === 500) {
+      throw new Error("The user already exists. Try logging in.");
     }
     return await res.json();
-  } catch (error) {
+  } catch (err) {
     return {
       error: true,
-      message: "Server or network error" + error,
+      message: (err as Error).message || "Network error",
     };
   }
 };

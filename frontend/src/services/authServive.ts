@@ -5,6 +5,7 @@ export interface LoginPayLoad {
 export interface LoginSession {
   error: boolean;
   sessionToken?: string;
+  refreshToken?: string;
   message?: string;
   type?: string;
 }
@@ -20,15 +21,19 @@ export const loginUser = async (
       },
       body: JSON.stringify(payLoad),
     });
-    if (!res.ok) {
-      throw new Error("login failed");
+    console.log(res.ok);
+    if (res.status === 400) {
+      throw new Error("Invalid credentials");
+    } else if (res.status === 404) {
+      throw new Error("User not found. Try registering first.");
+    } else if (res.status === 500) {
+      throw new Error("Server error. Please try again later.");
     }
-
     return await res.json();
   } catch (err) {
     return {
       error: true,
-      message: "Network or server error",
+      message: (err as Error).message || "Network error",
     };
   }
 };

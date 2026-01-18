@@ -55,7 +55,13 @@ const HomePage = () => {
     const serverChannels = selectedServer.channels;
     return serverChannels;
   };
-
+  const getSessionToken = () => {
+    try {
+      console.log(localStorage.getItem("sessionToken"));
+    } catch (err) {
+      console.error("Errot is retriving the session token");
+    }
+  };
   return (
     <div className="home">
       <div className="serverList">

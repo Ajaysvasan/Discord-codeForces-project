@@ -3,7 +3,6 @@ import { useState, useEffect, type FormEvent } from "react";
 import "./styles/loginPage.css";
 import { validateEmail, validatePassword } from "../utils/handleLogin";
 import { loginUser } from "../services/authServive";
-import { sendSessionToken } from "../services/sendSessionToken";
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -45,6 +44,11 @@ const LoginPage = () => {
     });
     if (!response.error) {
       isLoading(false);
+      // adding session token to the local storage
+      localStorage.setItem(
+        "sessionToken",
+        JSON.stringify(response.sessionToken)
+      );
       navigate("/home");
     } else {
       alert(response.message);
