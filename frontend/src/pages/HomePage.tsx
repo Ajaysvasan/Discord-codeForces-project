@@ -57,9 +57,9 @@ const HomePage = () => {
   };
   const getSessionToken = () => {
     try {
-      console.log(localStorage.getItem("sessionToken"));
+      localStorage.getItem("sessionToken");
     } catch (err) {
-      console.error("Errot is retriving the session token");
+      console.error("Errot is retriving the session token: ", err);
     }
   };
   return (

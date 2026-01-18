@@ -8,7 +8,7 @@ interface RegisterPayLoad {
 interface RegisterSession {
   error: boolean;
   message?: string;
-  sessionToken?: string;
+  accessToken?: string;
   refreshToken?: string;
   type?: string;
 }
@@ -17,7 +17,6 @@ const registerUser = async (
   payLoad: RegisterPayLoad
 ): Promise<RegisterSession> => {
   try {
-    console.log("registerUser payload:", payLoad);
     const res = await fetch("http://127.0.0.1:8000/api/register/", {
       method: "POST",
       headers: {

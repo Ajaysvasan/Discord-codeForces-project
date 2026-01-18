@@ -4,7 +4,7 @@ export interface LoginPayLoad {
 }
 export interface LoginSession {
   error: boolean;
-  sessionToken?: string;
+  accessToken?: string;
   refreshToken?: string;
   message?: string;
   type?: string;
@@ -21,7 +21,6 @@ export const loginUser = async (
       },
       body: JSON.stringify(payLoad),
     });
-    console.log(res.ok);
     if (res.status === 400) {
       throw new Error("Invalid credentials");
     } else if (res.status === 404) {

@@ -47,7 +47,7 @@ const LoginPage = () => {
       // adding session token to the local storage
       localStorage.setItem(
         "sessionToken",
-        JSON.stringify(response.sessionToken)
+        JSON.stringify(response.accessToken)
       );
       navigate("/home");
     } else {

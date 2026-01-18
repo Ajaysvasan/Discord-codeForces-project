@@ -1,6 +1,7 @@
 import os
 import sys
 from datetime import date
+from logging import log
 
 from config import settings
 from db.session import get_db
@@ -74,6 +75,7 @@ def login(data: LoginData, db: Session = Depends(get_db)):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="User does not exists"
         )
+    hashed_password = result.password
     if not verify(hashed_password, password):
         logger.warning(f"Invalid credentials has been entered")
         raise HTTPException(
@@ -83,11 +85,20 @@ def login(data: LoginData, db: Session = Depends(get_db)):
     user_id = result.id
     try:
         access_token = create_refresh_token(str(user_id))
+        print(f"The access token is {access_token}")
+        refresh_token = create_refresh_token(str(user_id))
+        if access_token is None or refresh_token is None:
+            logger.error(f"Token generation failed for the user {data.identifier}")
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Token generation failed",
+            )
         logger.info(f"Loggin  is successful for the user {data.identifier}")
         return {
             "error": False,
             "message": "Login successful",
-            "sessionToken": access_token,
+            "accessToken": access_token,
+            "refreshToken": refresh_token,
             "type": "bearer",
         }
     except Exception as e:
@@ -152,10 +163,19 @@ def register(data: RegisterData, db: Session = Depends(get_db)):
             detail="interval server error",
         )
     access_token = create_refresh_token(str(new_user.id))
+    refresh_token = create_refresh_token(str(new_user.id))
+    if access_token is None or refresh_token is None:
+        logger.error(f"Token generation failed for the user {data.email}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Token generation failed",
+        )
+
     return {
         "error": False,
         "message": "Registration successful",
-        "sessionToken": access_token,
+        "accessToken": access_token,
+        "refreshToken": refresh_token,
         "type": "bearer",
     }
 
@@ -178,7 +198,10 @@ def post_message():
 def submit_code(code_data: CodeSubmissionData):
     logger.info(f"Attempt to run the code by the user")
     if not verify_access_token(code_data.access_token):
-        return {}
+        logger.warning(f"Invalid access token provided")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid access token"
+        )
     try:
         problem_id = code_data.pid
         code = code_data.code
