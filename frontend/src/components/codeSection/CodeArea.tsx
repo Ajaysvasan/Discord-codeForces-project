@@ -16,7 +16,9 @@ const CodeArea = () => {
   };
 
   const handleCodeSubmit = async (pid: number, mode: string) => {
+    const access_token = localStorage.getItem("access_token");
     const payload = {
+      access_token: access_token,
       code: codeRef.current,
       pid: pid,
       selectedLanguage: selectedLanguage,

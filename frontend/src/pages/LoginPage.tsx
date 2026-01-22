@@ -46,8 +46,12 @@ const LoginPage = () => {
       isLoading(false);
       // adding session token to the local storage
       localStorage.setItem(
-        "sessionToken",
+        "access_token",
         JSON.stringify(response.accessToken)
+      );
+      localStorage.setItem(
+        "refresh_token",
+        JSON.stringify(response.refreshToken)
       );
       navigate("/home");
     } else {

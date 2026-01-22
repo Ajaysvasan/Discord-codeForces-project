@@ -7,6 +7,7 @@ from config import settings
 from db.session import get_db
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.security import OAuth2PasswordBearer
 from logger import logger
 from models.users import User
 from pydantic import BaseModel
@@ -20,6 +21,7 @@ sys.path.append(module_dir)
 from services.sandboxing import run_code
 
 app = FastAPI(title="Discord_codeforces project")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/login/")
 
 app.add_middleware(
     CORSMiddleware,
@@ -62,6 +64,16 @@ class CodeSubmissionData(BaseModel):
 class SessionToken(BaseModel):
     sessionToken: str
     uid: int
+
+
+def get_current_user(token: str = Depends(oauth2_scheme)):
+    user_id = verify_access_token(token)
+    if not user_id:
+        logger.error("Error user not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
+        )
+    return user_id
 
 
 @app.post("/api/login/")
@@ -195,7 +207,9 @@ def post_message():
 # if it is submit then all test cases are executed and the code is updated and stored in the database
 # and the leaderboards are updated accordingly
 @app.post("/api/submit-code/")
-def submit_code(code_data: CodeSubmissionData):
+def submit_code(
+    code_data: CodeSubmissionData, user_id: str = Depends(get_current_user)
+):
     logger.info(f"Attempt to run the code by the user")
     if not verify_access_token(code_data.access_token):
         logger.warning(f"Invalid access token provided")
@@ -210,7 +224,6 @@ def submit_code(code_data: CodeSubmissionData):
         if code_data.mode not in ["run", "submit"]:
             return {"success": False, "message": "Invalid mode"}
         result = run_code(selected_language, code, problem_id, mode)
-        print(result)
         # Logic for submitting code and running all test cases
         # logic for updating database and leaderboards
         # sandbxing to be precise
