@@ -31,6 +31,7 @@ def create_access_token(subject: str) -> str:
 def verify_access_token(token: str) -> str:
     try:
         payload = jwt.decode(token, JWT_KEY, algorithms=[ALGORITHM])
+        print(payload)
 
         if payload.get("type") != "access":
 

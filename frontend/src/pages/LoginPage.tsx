@@ -20,6 +20,9 @@ const LoginPage = () => {
     };
   }, []);
   const handleUserName = (value: string) => {
+    console.log(userName);
+    console.log(error);
+    console.log(loading);
     if (validateEmail(value) == null) {
       setEmail(value);
     } else {
@@ -53,6 +56,7 @@ const LoginPage = () => {
         "refresh_token",
         JSON.stringify(response.refreshToken)
       );
+      console.log(localStorage.getItem("access_token"));
       navigate("/home");
     } else {
       alert(response.message);

@@ -1,13 +1,13 @@
 import os
 import sys
 from datetime import date
-from logging import log
 
-from config import settings
+from config import Settings, settings
 from db.session import get_db
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer
+from jose import JWTError, jwt
 from logger import logger
 from models.users import User
 from pydantic import BaseModel
@@ -17,6 +17,8 @@ from sqlalchemy.orm import Session
 
 module_dir = os.path.join(os.path.dirname(__file__), "services")
 sys.path.append(module_dir)
+JWT_KEY = Settings.JWT_SECRET_KEY
+ALGORITHM = Settings.JWT_ALGORITHM
 
 from services.sandboxing import run_code
 
@@ -91,7 +93,7 @@ def login(data: LoginData, db: Session = Depends(get_db)):
     if not verify(hashed_password, password):
         logger.warning(f"Invalid credentials has been entered")
         raise HTTPException(
-            status_code=status.HTTP_401_NOT_FOUND, detail="Invalid credentials"
+            status_code=status.HTTP_404_NOT_FOUND, detail="Invalid credentials"
         )
 
     user_id = result.id
@@ -208,16 +210,21 @@ def post_message():
 # and the leaderboards are updated accordingly
 @app.post("/api/submit-code/")
 def submit_code(
-    code_data: CodeSubmissionData, user_id: str = Depends(get_current_user)
+    code_data: CodeSubmissionData,
 ):
+    print(code_data)
     logger.info(f"Attempt to run the code by the user")
-    if not verify_access_token(code_data.access_token):
-        logger.warning(f"Invalid access token provided")
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid access token"
-        )
+    # print(verify_access_token(code_data.access_token))
+    # if not verify_access_token(code_data.access_token):
+    #     logger.warning(f"Invalid access token provided")
+    #     raise HTTPException(
+    #         status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid access token"
+    #     )
     try:
         problem_id = code_data.pid
+
+        payload = jwt.decode(code_data.access_token, JWT_KEY, algorithms=[ALGORITHM])
+        print(payload)
         code = code_data.code
         selected_language = code_data.selectedLanguage
         mode = code_data.mode
