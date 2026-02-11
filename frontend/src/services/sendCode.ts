@@ -20,7 +20,6 @@ export const sendCode = async (
   payload: codePayload
 ): Promise<sendCodeResponse> => {
   try {
-    console.log(JSON.stringify(payload));
     const response = await fetch("http://127.0.0.1:8000/api/submit-code/", {
       method: "POST",
       headers: {
